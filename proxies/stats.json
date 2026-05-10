@@ -1,0 +1,16 @@
+{
+  "updatedAt": null,
+  "totalCandidates": 0,
+  "working": {
+    "http": 0,
+    "https": 0,
+    "socks4": 0,
+    "socks5": 0
+  },
+  "mixed": 0,
+  "settings": {
+    "concurrency": 250,
+    "checkTimeoutSeconds": 8,
+    "maxProxiesPerRun": 12000
+  }
+}

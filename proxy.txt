@@ -1,0 +1,51 @@
+# Add raw proxy list URLs here, one URL per line.
+# GitHub raw URLs work well. Lines beginning with # are ignored.
+#
+# The checker infers category from the URL or line content:
+# http, https, socks4, socks5. If no type is visible, it tests both http and https.
+
+# TheSpeedX/PROXY-List
+https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/http.txt
+https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks4.txt
+https://raw.githubusercontent.com/TheSpeedX/PROXY-List/master/socks5.txt
+
+# SoliSpirit/proxy-list
+https://raw.githubusercontent.com/SoliSpirit/proxy-list/main/http.txt
+https://raw.githubusercontent.com/SoliSpirit/proxy-list/main/https.txt
+https://raw.githubusercontent.com/SoliSpirit/proxy-list/main/socks4.txt
+https://raw.githubusercontent.com/SoliSpirit/proxy-list/main/socks5.txt
+
+# themiralay/Proxy-List-World
+https://raw.githubusercontent.com/themiralay/Proxy-List-World/master/data.txt
+
+# dpangestuw/Free-Proxy
+https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/http_proxies.txt
+https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/socks4_proxies.txt
+https://raw.githubusercontent.com/dpangestuw/Free-Proxy/main/socks5_proxies.txt
+
+# proxygenerator1/ProxyGenerator
+https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/MostStable/http.txt
+https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/MostStable/socks4.txt
+https://raw.githubusercontent.com/proxygenerator1/ProxyGenerator/main/MostStable/socks5.txt
+
+# VPSLabCloud/VPSLab-Free-Proxy-List
+https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_all.txt
+https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/http_ssl.txt
+https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks4_all.txt
+https://raw.githubusercontent.com/VPSLabCloud/VPSLab-Free-Proxy-List/main/socks5_all.txt
+
+# ebrasha/abdal-proxy-hub
+https://raw.githubusercontent.com/ebrasha/abdal-proxy-hub/main/http-proxy-list-by-EbraSha.txt
+https://raw.githubusercontent.com/ebrasha/abdal-proxy-hub/main/https-proxy-list-by-EbraSha.txt
+https://raw.githubusercontent.com/ebrasha/abdal-proxy-hub/main/socks4-proxy-list-by-EbraSha.txt
+https://raw.githubusercontent.com/ebrasha/abdal-proxy-hub/main/socks5-proxy-list-by-EbraSha.txt
+
+# databay-labs/free-proxy-list
+https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/http.txt
+https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/socks4.txt
+https://raw.githubusercontent.com/databay-labs/free-proxy-list/master/socks5.txt
+
+# roosterkid/openproxylist
+https://raw.githubusercontent.com/roosterkid/openproxylist/main/HTTPS_RAW.txt
+https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS4_RAW.txt
+https://raw.githubusercontent.com/roosterkid/openproxylist/main/SOCKS5_RAW.txt

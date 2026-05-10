@@ -1,0 +1,17 @@
+{
+  "name": "proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A scheduled working proxy list with a Vercel-ready browser UI.",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "python -m http.server 3000",
+    "check": "python scripts/check_proxies.py"
+  },
+  "keywords": [
+    "proxy",
+    "github-actions",
+    "vercel"
+  ],
+  "license": "MIT"
+}
