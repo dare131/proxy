@@ -44,11 +44,16 @@ jobs:
 
       - name: Show generated proxy counts
         run: |
+          find proxies -maxdepth 3 -type f -print | sort
           echo "Source candidate counts:"
-          wc -l proxies/source/http.txt proxies/source/https.txt proxies/source/socks4.txt proxies/source/socks5.txt proxies/source/mixed.txt
+          for file in proxies/source/http.txt proxies/source/https.txt proxies/source/socks4.txt proxies/source/socks5.txt proxies/source/mixed.txt; do
+            if [ -f "$file" ]; then wc -l "$file"; else echo "0 $file (missing)"; fi
+          done
           echo "Working proxy counts:"
-          wc -l proxies/http.txt proxies/https.txt proxies/socks4.txt proxies/socks5.txt proxies/mixed.txt
-          cat proxies/stats.json
+          for file in proxies/http.txt proxies/https.txt proxies/socks4.txt proxies/socks5.txt proxies/mixed.txt; do
+            if [ -f "$file" ]; then wc -l "$file"; else echo "0 $file (missing)"; fi
+          done
+          if [ -f proxies/stats.json ]; then cat proxies/stats.json; else echo "proxies/stats.json missing"; fi
 
       - name: Commit updated proxy lists
         run: |
