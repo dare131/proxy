@@ -52,10 +52,14 @@ Open `http://localhost:3000`.
 
 ## Deploy On Vercel
 
-Import this repository in Vercel or run:
+Import this repository in Vercel and set **Root Directory** to `web`.
+
+You can also deploy from the repository root because `vercel.json` forces a static build, but `web` is the cleanest Vercel project root because it hides the GitHub Actions Python checker from Vercel auto-detection.
+
+With the Vercel CLI:
 
 ```bash
-vercel deploy
+vercel deploy web
 ```
 
 The site is static. It fetches live files from:

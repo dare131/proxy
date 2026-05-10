@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Fresh working HTTP, HTTPS, SOCKS4, and SOCKS5 proxy lists.">
+    <title>Proxy</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="topbar" aria-label="Proxy status">
+        <div>
+          <p class="eyebrow">dare131/proxy</p>
+          <h1>Proxy</h1>
+        </div>
+        <button class="icon-button" id="refreshButton" type="button" aria-label="Refresh proxy lists" title="Refresh proxy lists">
+          <span aria-hidden="true">Refresh</span>
+        </button>
+      </section>
+
+      <section class="summary" aria-label="Summary">
+        <div>
+          <span class="label">Updated</span>
+          <strong id="updatedAt">Waiting for first run</strong>
+        </div>
+        <div>
+          <span class="label">Working</span>
+          <strong id="totalCount">0</strong>
+        </div>
+        <div>
+          <span class="label">Sources tested</span>
+          <strong id="candidateCount">0</strong>
+        </div>
+      </section>
+
+      <section class="workspace" aria-label="Proxy workspace">
+        <aside class="filters" aria-label="Proxy type filters">
+          <label><input class="type-check" type="checkbox" value="http" checked> HTTP <span id="httpCount">0</span></label>
+          <label><input class="type-check" type="checkbox" value="https" checked> HTTPS <span id="httpsCount">0</span></label>
+          <label><input class="type-check" type="checkbox" value="socks4" checked> SOCKS4 <span id="socks4Count">0</span></label>
+          <label><input class="type-check" type="checkbox" value="socks5" checked> SOCKS5 <span id="socks5Count">0</span></label>
+          <label><input id="schemeToggle" type="checkbox"> Include scheme <span>URL</span></label>
+          <div class="actions">
+            <button id="copyButton" type="button">Copy</button>
+            <button id="downloadButton" type="button">Download</button>
+          </div>
+        </aside>
+
+        <section class="list" aria-label="Working proxies">
+          <div class="list-header">
+            <div>
+              <span class="label">Selected mix</span>
+              <strong id="selectedCount">0 proxies</strong>
+            </div>
+            <input id="searchInput" type="search" placeholder="Filter by IP or port" autocomplete="off">
+          </div>
+          <pre id="proxyOutput" aria-live="polite">Loading proxy lists...</pre>
+        </section>
+      </section>
+    </main>
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
