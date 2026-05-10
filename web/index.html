@@ -40,10 +40,16 @@
           <label><input class="type-check" type="checkbox" value="https" checked> HTTPS <span id="httpsCount">0</span></label>
           <label><input class="type-check" type="checkbox" value="socks4" checked> SOCKS4 <span id="socks4Count">0</span></label>
           <label><input class="type-check" type="checkbox" value="socks5" checked> SOCKS5 <span id="socks5Count">0</span></label>
-          <label><input id="schemeToggle" type="checkbox"> Include scheme <span>URL</span></label>
+          <div class="mode-group" aria-label="Export format">
+            <label><input class="format-radio" type="radio" name="format" value="raw" checked> Raw <span>host:port</span></label>
+            <label><input class="format-radio" type="radio" name="format" value="browser"> Browser <span>Chrome</span></label>
+            <label><input class="format-radio" type="radio" name="format" value="typed"> Typed <span>Exact</span></label>
+          </div>
           <div class="actions">
             <button id="copyButton" type="button">Copy</button>
             <button id="downloadButton" type="button">Download</button>
+            <button id="copyChromeButton" type="button">Copy Chrome</button>
+            <button id="downloadChromeButton" type="button">Chrome File</button>
           </div>
         </aside>
 
