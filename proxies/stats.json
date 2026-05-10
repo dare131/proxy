@@ -1,16 +1,25 @@
 {
-  "updatedAt": "2026-05-10T17:18:38.592069+00:00",
-  "totalCandidates": 12000,
+  "updatedAt": "2026-05-10T17:54:29.497175+00:00",
+  "totalCandidates": 50000,
   "working": {
-    "http": 89,
-    "https": 142,
+    "http": 105,
+    "https": 444,
     "socks4": 1,
-    "socks5": 5
+    "socks5": 11
   },
-  "mixed": 228,
+  "mixed": 556,
   "settings": {
     "concurrency": 250,
     "checkTimeoutSeconds": 6,
-    "maxProxiesPerRun": 12000
+    "maxProxiesPerRun": 50000,
+    "minSuccesses": 2,
+    "httpTestUrls": [
+      "http://httpbin.org/ip",
+      "http://www.gstatic.com/generate_204"
+    ],
+    "httpsTestUrls": [
+      "https://api.ipify.org?format=json",
+      "https://www.gstatic.com/generate_204"
+    ]
   }
 }
