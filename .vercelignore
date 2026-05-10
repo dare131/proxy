@@ -1,0 +1,8 @@
+.github/
+scripts/
+__pycache__/
+.venv/
+node_modules/
+requirements.txt
+proxy.txt
+README.md
