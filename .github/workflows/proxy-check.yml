@@ -39,7 +39,10 @@ jobs:
           CONCURRENCY: "250"
           CHECK_TIMEOUT: "6"
           FETCH_TIMEOUT: "20"
-          MAX_PROXIES_PER_RUN: "12000"
+          MAX_PROXIES_PER_RUN: "50000"
+          MIN_SUCCESSES: "2"
+          HTTP_TEST_URLS: "http://httpbin.org/ip,http://www.gstatic.com/generate_204"
+          HTTPS_TEST_URLS: "https://api.ipify.org?format=json,https://www.gstatic.com/generate_204"
         run: python -u scripts/check_proxies.py
 
       - name: Show generated proxy counts

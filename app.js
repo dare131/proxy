@@ -59,10 +59,14 @@ function selectedTypes() {
   return elements.checks.filter((check) => check.checked).map((check) => check.value);
 }
 
+function proxySchemeForType(type) {
+  return type === "https" ? "http" : type;
+}
+
 function selectedProxies() {
   const needle = elements.searchInput.value.trim().toLowerCase();
   const combined = selectedTypes().flatMap((type) =>
-    state.lists[type].map((line) => (elements.schemeToggle.checked ? `${type}://${line}` : line))
+    state.lists[type].map((line) => (elements.schemeToggle.checked ? `${proxySchemeForType(type)}://${line}` : line))
   );
   const unique = [...new Set(combined)].sort();
   return needle ? unique.filter((line) => line.toLowerCase().includes(needle)) : unique;

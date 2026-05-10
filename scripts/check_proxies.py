@@ -22,13 +22,20 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_FILE = ROOT / "proxy.txt"
 OUTPUT_DIR = ROOT / "proxies"
 SOURCE_OUTPUT_DIR = OUTPUT_DIR / "source"
-HTTP_TEST_URL = os.getenv("HTTP_TEST_URL", "http://httpbin.org/ip")
-HTTPS_TEST_URL = os.getenv("HTTPS_TEST_URL", "https://api.ipify.org?format=json")
 FETCH_TIMEOUT = int(os.getenv("FETCH_TIMEOUT", "20"))
 CHECK_TIMEOUT = int(os.getenv("CHECK_TIMEOUT", "8"))
 CONCURRENCY = int(os.getenv("CONCURRENCY", "250"))
-MAX_PROXIES_PER_RUN = int(os.getenv("MAX_PROXIES_PER_RUN", "12000"))
+MAX_PROXIES_PER_RUN = int(os.getenv("MAX_PROXIES_PER_RUN", "50000"))
+MIN_SUCCESSES = max(1, int(os.getenv("MIN_SUCCESSES", "2")))
 USER_AGENT = "dare131-proxy-checker/1.0"
+
+
+def env_urls(name: str, default: str) -> list[str]:
+    return [url.strip() for url in os.getenv(name, default).split(",") if url.strip()]
+
+
+HTTP_TEST_URLS = env_urls("HTTP_TEST_URLS", "http://httpbin.org/ip,http://www.gstatic.com/generate_204")
+HTTPS_TEST_URLS = env_urls("HTTPS_TEST_URLS", "https://api.ipify.org?format=json,https://www.gstatic.com/generate_204")
 
 
 PROXY_PATTERN = re.compile(
@@ -167,24 +174,48 @@ async def load_candidates(urls: Iterable[str]) -> list[Candidate]:
 
 
 async def check_http(candidate: Candidate) -> bool:
-    target_url = HTTPS_TEST_URL if candidate.kind == "https" else HTTP_TEST_URL
+    target_urls = HTTPS_TEST_URLS if candidate.kind == "https" else HTTP_TEST_URLS
     timeout = ClientTimeout(total=CHECK_TIMEOUT, connect=CHECK_TIMEOUT)
     connector = aiohttp.TCPConnector(limit=1, ssl=False)
+    successes = 0
     try:
         async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
-            async with session.get(target_url, proxy=candidate.proxy_url(), allow_redirects=False) as response:
-                return 200 <= response.status < 400
+            for index, target_url in enumerate(target_urls):
+                try:
+                    async with session.get(target_url, proxy=candidate.proxy_url(), allow_redirects=False) as response:
+                        if 200 <= response.status < 400:
+                            successes += 1
+                            if successes >= MIN_SUCCESSES:
+                                return True
+                except Exception:
+                    pass
+                remaining = len(target_urls) - index - 1
+                if successes + remaining < MIN_SUCCESSES:
+                    return False
+            return False
     except Exception:
         return False
 
 
 async def check_socks(candidate: Candidate) -> bool:
     timeout = ClientTimeout(total=CHECK_TIMEOUT, connect=CHECK_TIMEOUT)
+    successes = 0
     try:
         connector = ProxyConnector.from_url(candidate.proxy_url(), rdns=True)
         async with aiohttp.ClientSession(timeout=timeout, connector=connector) as session:
-            async with session.get(HTTP_TEST_URL, allow_redirects=False) as response:
-                return 200 <= response.status < 400
+            for index, target_url in enumerate(HTTP_TEST_URLS):
+                try:
+                    async with session.get(target_url, allow_redirects=False) as response:
+                        if 200 <= response.status < 400:
+                            successes += 1
+                            if successes >= MIN_SUCCESSES:
+                                return True
+                except Exception:
+                    pass
+                remaining = len(HTTP_TEST_URLS) - index - 1
+                if successes + remaining < MIN_SUCCESSES:
+                    return False
+            return False
     except Exception:
         return False
 
@@ -221,6 +252,9 @@ def write_outputs(results: dict[str, list[str]], total_candidates: int) -> None:
             "concurrency": CONCURRENCY,
             "checkTimeoutSeconds": CHECK_TIMEOUT,
             "maxProxiesPerRun": MAX_PROXIES_PER_RUN,
+            "minSuccesses": MIN_SUCCESSES,
+            "httpTestUrls": HTTP_TEST_URLS,
+            "httpsTestUrls": HTTPS_TEST_URLS,
         },
     }
     (OUTPUT_DIR / "stats.json").write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
