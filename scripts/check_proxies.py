@@ -138,10 +138,32 @@ async def load_candidates(urls: Iterable[str]) -> list[Candidate]:
         found.update(parse_candidates(text, url))
 
     ordered = sorted(found, key=lambda item: (item.kind, item.host, item.port, item.username or ""))
-    if len(ordered) > MAX_PROXIES_PER_RUN:
-        print(f"limiting candidates from {len(ordered)} to {MAX_PROXIES_PER_RUN}")
-        ordered = ordered[:MAX_PROXIES_PER_RUN]
-    return ordered
+    if len(ordered) <= MAX_PROXIES_PER_RUN:
+        return ordered
+
+    categories = ["http", "https", "socks4", "socks5"]
+    groups: dict[str, list[Candidate]] = {kind: [] for kind in categories}
+    for candidate in ordered:
+        groups.setdefault(candidate.kind, []).append(candidate)
+
+    per_kind = max(1, MAX_PROXIES_PER_RUN // len(categories))
+    selected: list[Candidate] = []
+    selected_set: set[Candidate] = set()
+    for kind in categories:
+        for candidate in groups.get(kind, [])[:per_kind]:
+            selected.append(candidate)
+            selected_set.add(candidate)
+
+    for candidate in ordered:
+        if len(selected) >= MAX_PROXIES_PER_RUN:
+            break
+        if candidate not in selected_set:
+            selected.append(candidate)
+            selected_set.add(candidate)
+
+    limited = sorted(selected, key=lambda item: (item.kind, item.host, item.port, item.username or ""))
+    print(f"limiting candidates from {len(ordered)} to {len(limited)} with balanced type sampling")
+    return limited
 
 
 async def check_http(candidate: Candidate) -> bool:
@@ -243,3 +265,7 @@ def main() -> None:
     parser.add_argument("--sources", type=Path, default=SOURCE_FILE)
     args = parser.parse_args()
     asyncio.run(async_main(args))
+
+
+if __name__ == "__main__":
+    main()

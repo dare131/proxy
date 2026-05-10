@@ -48,6 +48,13 @@ python scripts/check_proxies.py
 python -m http.server 3000
 ```
 
+If you see `ModuleNotFoundError: No module named 'aiohttp_socks'`, install the requirements first with:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
 Open `http://localhost:3000`.
 
 ## Deploy On Vercel
