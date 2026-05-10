@@ -19,7 +19,9 @@ const elements = {
   refreshButton: document.querySelector("#refreshButton"),
   copyButton: document.querySelector("#copyButton"),
   downloadButton: document.querySelector("#downloadButton"),
-  schemeToggle: document.querySelector("#schemeToggle"),
+  copyChromeButton: document.querySelector("#copyChromeButton"),
+  downloadChromeButton: document.querySelector("#downloadChromeButton"),
+  formatRadios: [...document.querySelectorAll(".format-radio")],
   checks: [...document.querySelectorAll(".type-check")],
 };
 
@@ -63,10 +65,25 @@ function proxySchemeForType(type) {
   return type === "https" ? "http" : type;
 }
 
+function selectedFormat() {
+  return elements.formatRadios.find((radio) => radio.checked)?.value ?? "raw";
+}
+
+function formatProxy(type, line, format = selectedFormat()) {
+  if (format === "raw") {
+    return line;
+  }
+  if (format === "browser") {
+    return `${proxySchemeForType(type)}://${line}`;
+  }
+  return `${type}://${line}`;
+}
+
 function selectedProxies() {
   const needle = elements.searchInput.value.trim().toLowerCase();
+  const format = selectedFormat();
   const combined = selectedTypes().flatMap((type) =>
-    state.lists[type].map((line) => (elements.schemeToggle.checked ? `${proxySchemeForType(type)}://${line}` : line))
+    state.lists[type].map((line) => formatProxy(type, line, format))
   );
   const unique = [...new Set(combined)].sort();
   return needle ? unique.filter((line) => line.toLowerCase().includes(needle)) : unique;
@@ -87,19 +104,38 @@ function render() {
 
 function selectedFilename() {
   const types = selectedTypes();
-  return types.length === TYPES.length ? "proxy-mixed.txt" : `proxy-${types.join("-") || "empty"}.txt`;
+  const format = selectedFormat();
+  const prefix = format === "browser" ? "chrome-proxy" : "proxy";
+  return types.length === TYPES.length ? `${prefix}-mixed.txt` : `${prefix}-${types.join("-") || "empty"}.txt`;
 }
 
-async function copySelected() {
+async function copySelected(format = selectedFormat(), button = elements.copyButton) {
+  const previousFormat = selectedFormat();
+  if (format !== previousFormat) {
+    elements.formatRadios.forEach((radio) => {
+      radio.checked = radio.value === format;
+    });
+  }
   const text = selectedProxies().join("\n");
   await navigator.clipboard.writeText(text);
-  elements.copyButton.textContent = "Copied";
+  button.textContent = "Copied";
   window.setTimeout(() => {
-    elements.copyButton.textContent = "Copy";
+    button.textContent = button === elements.copyChromeButton ? "Copy Chrome" : "Copy";
   }, 1200);
+  if (format !== previousFormat) {
+    elements.formatRadios.forEach((radio) => {
+      radio.checked = radio.value === previousFormat;
+    });
+  }
 }
 
-function downloadSelected() {
+function downloadSelected(format = selectedFormat()) {
+  const previousFormat = selectedFormat();
+  if (format !== previousFormat) {
+    elements.formatRadios.forEach((radio) => {
+      radio.checked = radio.value === format;
+    });
+  }
   const blob = new Blob([selectedProxies().join("\n") + "\n"], { type: "text/plain" });
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
@@ -107,14 +143,21 @@ function downloadSelected() {
   anchor.download = selectedFilename();
   anchor.click();
   URL.revokeObjectURL(url);
+  if (format !== previousFormat) {
+    elements.formatRadios.forEach((radio) => {
+      radio.checked = radio.value === previousFormat;
+    });
+  }
 }
 
 elements.checks.forEach((check) => check.addEventListener("change", render));
-elements.schemeToggle.addEventListener("change", render);
+elements.formatRadios.forEach((radio) => radio.addEventListener("change", render));
 elements.searchInput.addEventListener("input", render);
 elements.refreshButton.addEventListener("click", () => loadData().catch(showError));
 elements.copyButton.addEventListener("click", () => copySelected().catch(showError));
-elements.downloadButton.addEventListener("click", downloadSelected);
+elements.downloadButton.addEventListener("click", () => downloadSelected());
+elements.copyChromeButton.addEventListener("click", () => copySelected("browser", elements.copyChromeButton).catch(showError));
+elements.downloadChromeButton.addEventListener("click", () => downloadSelected("browser"));
 
 function showError(error) {
   elements.proxyOutput.textContent = `Unable to load proxy data.\n${error.message}`;
