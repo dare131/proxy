@@ -26,7 +26,7 @@ FETCH_TIMEOUT = int(os.getenv("FETCH_TIMEOUT", "20"))
 CHECK_TIMEOUT = int(os.getenv("CHECK_TIMEOUT", "8"))
 CONCURRENCY = int(os.getenv("CONCURRENCY", "250"))
 MAX_PROXIES_PER_RUN = int(os.getenv("MAX_PROXIES_PER_RUN", "50000"))
-MIN_SUCCESSES = max(1, int(os.getenv("MIN_SUCCESSES", "2")))
+MIN_SUCCESSES = max(1, int(os.getenv("MIN_SUCCESSES", "3")))
 USER_AGENT = "dare131-proxy-checker/1.0"
 
 
@@ -34,8 +34,15 @@ def env_urls(name: str, default: str) -> list[str]:
     return [url.strip() for url in os.getenv(name, default).split(",") if url.strip()]
 
 
-HTTP_TEST_URLS = env_urls("HTTP_TEST_URLS", "http://httpbin.org/ip,http://www.gstatic.com/generate_204")
-HTTPS_TEST_URLS = env_urls("HTTPS_TEST_URLS", "https://api.ipify.org?format=json,https://www.gstatic.com/generate_204")
+HTTP_TEST_URLS = env_urls(
+    "HTTP_TEST_URLS",
+    "http://httpbin.org/ip,http://www.gstatic.com/generate_204,http://example.com",
+)
+HTTPS_TEST_URLS = env_urls(
+    "HTTPS_TEST_URLS",
+    "https://api.ipify.org?format=json,https://www.gstatic.com/generate_204,https://www.cloudflare.com/cdn-cgi/trace",
+)
+BOT_TEST_URLS = env_urls("BOT_TEST_URLS", "")
 
 
 PROXY_PATTERN = re.compile(
@@ -174,7 +181,7 @@ async def load_candidates(urls: Iterable[str]) -> list[Candidate]:
 
 
 async def check_http(candidate: Candidate) -> bool:
-    target_urls = HTTPS_TEST_URLS if candidate.kind == "https" else HTTP_TEST_URLS
+    target_urls = HTTPS_TEST_URLS + BOT_TEST_URLS if candidate.kind == "https" else HTTP_TEST_URLS
     timeout = ClientTimeout(total=CHECK_TIMEOUT, connect=CHECK_TIMEOUT)
     connector = aiohttp.TCPConnector(limit=1, ssl=False)
     successes = 0
@@ -255,6 +262,7 @@ def write_outputs(results: dict[str, list[str]], total_candidates: int) -> None:
             "minSuccesses": MIN_SUCCESSES,
             "httpTestUrls": HTTP_TEST_URLS,
             "httpsTestUrls": HTTPS_TEST_URLS,
+            "botTestUrls": BOT_TEST_URLS,
         },
     }
     (OUTPUT_DIR / "stats.json").write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
