@@ -28,6 +28,8 @@ https://raw.githubusercontent.com/example/repo/main/socks5.txt
 
 The checker infers the proxy type from the source URL or the proxy line. If no type is visible, it tests the proxy as both HTTP and HTTPS.
 
+The working lists use dual filtering by default: `MIN_SUCCESSES=2`, so a proxy must pass two independent live requests before it is written to `proxies/http.txt`, `proxies/https.txt`, `proxies/socks4.txt`, or `proxies/socks5.txt`. Each run samples up to `50,000` candidates with balanced HTTP/HTTPS/SOCKS4/SOCKS5 coverage.
+
 The default sources currently include raw lists from:
 
 - `TheSpeedX/PROXY-List`
@@ -86,6 +88,8 @@ https://raw.githubusercontent.com/dare131/proxy/main/proxies/socks4.txt
 https://raw.githubusercontent.com/dare131/proxy/main/proxies/socks5.txt
 https://raw.githubusercontent.com/dare131/proxy/main/proxies/mixed.txt
 ```
+
+`https.txt` contains HTTP CONNECT proxies that worked against an HTTPS target. Most bot libraries should receive those as `http://host:port`, not `https://host:port`, unless the library specifically says it supports TLS-to-proxy HTTPS proxy URLs.
 
 ## Notes
 
