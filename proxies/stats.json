@@ -1,25 +1,29 @@
 {
-  "updatedAt": "2026-05-10T17:54:29.497175+00:00",
+  "updatedAt": "2026-05-11T06:22:57.981555+00:00",
   "totalCandidates": 50000,
   "working": {
-    "http": 105,
-    "https": 444,
-    "socks4": 1,
-    "socks5": 11
+    "http": 243,
+    "https": 234,
+    "socks4": 4,
+    "socks5": 15
   },
-  "mixed": 556,
+  "mixed": 490,
   "settings": {
     "concurrency": 250,
     "checkTimeoutSeconds": 6,
     "maxProxiesPerRun": 50000,
-    "minSuccesses": 2,
+    "minSuccesses": 3,
+    "sampleSeed": "2026-05-11",
     "httpTestUrls": [
       "http://httpbin.org/ip",
-      "http://www.gstatic.com/generate_204"
+      "http://www.gstatic.com/generate_204",
+      "http://example.com"
     ],
     "httpsTestUrls": [
       "https://api.ipify.org?format=json",
-      "https://www.gstatic.com/generate_204"
-    ]
+      "https://www.gstatic.com/generate_204",
+      "https://www.cloudflare.com/cdn-cgi/trace"
+    ],
+    "botTestUrls": []
   }
 }
