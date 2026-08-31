@@ -1,19 +1,19 @@
 {
-  "updatedAt": "2026-08-30T09:02:47.160277+00:00",
+  "updatedAt": "2026-08-31T09:22:31.121741+00:00",
   "totalCandidates": 50000,
   "working": {
-    "http": 380,
-    "https": 217,
-    "socks4": 9,
-    "socks5": 7
+    "http": 385,
+    "https": 327,
+    "socks4": 13,
+    "socks5": 17
   },
-  "mixed": 608,
+  "mixed": 732,
   "settings": {
     "concurrency": 250,
     "checkTimeoutSeconds": 6,
     "maxProxiesPerRun": 50000,
     "minSuccesses": 3,
-    "sampleSeed": "2026-08-30",
+    "sampleSeed": "2026-08-31",
     "httpTestUrls": [
       "http://www.gstatic.com/generate_204",
       "http://detectportal.firefox.com/success.txt",
